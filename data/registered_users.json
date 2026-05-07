@@ -1,0 +1,24 @@
+{
+  "pandu": {
+    "full_name": "pandu",
+    "email": "venkatjamjhyam19@gmail.com",
+    "company": "adb",
+    "username": "pandu",
+    "salt": "93e4f76c64a454da4a79e6643996ad04",
+    "password_hash": "ae4d9de6f94b38b8f048dec486e830895bc1310be55878cc9ae58744008bd2b5"
+  },
+  "venkat": {
+    "full_name": "venkat",
+    "email": "venkatjamjhyam12@gmail.com",
+    "username": "venkat",
+    "salt": "822fab5f4b491ede5b51b51531b60780",
+    "password_hash": "129c2837cfbce2b41ad26b16f1af108aafb42bb6e544e60591a2fe7b6124d196"
+  },
+  "venkat19": {
+    "full_name": "venkat",
+    "email": "venkatjamjhyam12@gmail.com",
+    "username": "venkat19",
+    "salt": "94fdd3a245b0cdecf0e5ed06d467f407",
+    "password_hash": "c0aed573a150259a832c285369caae6b55457bf8a64f400bdcf784f6365ec352"
+  }
+}

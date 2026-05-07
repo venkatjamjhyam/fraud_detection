@@ -1,0 +1,21 @@
+transaction_id,date,employee_id,department,vendor,category,amount,payment_method,location,transaction_time,approval_status,description
+TXN001,2026-05-01,EMP101,Finance,Amazon Business,Office Supplies,4500,Card,Hyderabad,10:30,Approved,Printer cartridges
+TXN002,2026-05-01,EMP102,HR,Apollo Pharmacy,Medical,2300,UPI,Hyderabad,12:15,Approved,First aid supplies
+TXN003,2026-05-02,EMP103,IT,Dell India,Hardware,58000,Bank Transfer,Bangalore,14:10,Approved,Laptop purchase
+TXN004,2026-05-02,EMP104,Operations,Local Stationery,Office Supplies,1200,Cash,Hyderabad,11:45,Approved,Files and notebooks
+TXN005,2026-05-03,EMP105,Sales,Uber,Travel,850,Card,Mumbai,09:20,Approved,Client travel
+TXN006,2026-05-03,EMP106,Finance,Unknown Vendor,Consulting,250000,Bank Transfer,Delhi,02:15,Pending,Urgent consulting fee
+TXN007,2026-05-04,EMP107,IT,CloudServe Pvt Ltd,Software,35000,Card,Hyderabad,16:00,Approved,Cloud subscription
+TXN008,2026-05-04,EMP108,Admin,Hotel Royal,Travel,7800,Card,Chennai,21:30,Approved,Business stay
+TXN009,2026-05-05,EMP109,Finance,QuickPay Services,Consulting,99999,UPI,Hyderabad,23:50,Approved,Service charge
+TXN010,2026-05-05,EMP110,Operations,Fuel Station A,Fuel,3200,Card,Hyderabad,08:40,Approved,Vehicle fuel
+TXN011,2026-05-06,EMP111,Sales,Amazon Business,Office Supplies,4700,Card,Hyderabad,10:10,Approved,Office items
+TXN012,2026-05-06,EMP112,Finance,Suspicious Vendor Pvt Ltd,Software,500000,Bank Transfer,Kolkata,01:10,Approved,One-time software license
+TXN013,2026-05-07,EMP113,HR,Cafe Coffee Day,Food,900,UPI,Hyderabad,15:30,Approved,Team snacks
+TXN014,2026-05-07,EMP114,IT,Microsoft,Software,18000,Card,Bangalore,13:00,Approved,Software licenses
+TXN015,2026-05-08,EMP115,Admin,Local Stationery,Office Supplies,1100,Cash,Hyderabad,10:50,Approved,Stationery
+TXN016,2026-05-08,EMP116,Finance,Unknown Vendor,Consulting,245000,Bank Transfer,Delhi,02:05,Approved,Consulting invoice duplicate-like
+TXN017,2026-05-09,EMP117,Operations,Fuel Station A,Fuel,3300,Card,Hyderabad,09:10,Approved,Vehicle fuel
+TXN018,2026-05-09,EMP118,Sales,Hotel Royal,Travel,8200,Card,Chennai,20:45,Approved,Client visit stay
+TXN019,2026-05-10,EMP119,Finance,QuickPay Services,Consulting,100000,UPI,Hyderabad,23:55,Approved,Round amount payment
+TXN020,2026-05-10,EMP120,IT,Dell India,Hardware,61000,Bank Transfer,Bangalore,14:20,Approved,Laptop purchase
