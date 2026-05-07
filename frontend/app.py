@@ -434,6 +434,9 @@ st.markdown(
             box-shadow: 0 18px 46px rgba(16,32,51,0.18) !important;
             overflow: hidden !important;
         }
+        div[data-baseweb="popover"] * {
+            color: #102033 !important;
+        }
         .st-key-mobile_nav .stButton > button,
         div[data-baseweb="popover"] .stButton > button {
             width: 100% !important;
@@ -510,6 +513,39 @@ st.markdown(
         color: var(--ink) !important;
         box-shadow: 0 14px 38px rgba(16,32,51,0.06) !important;
     }
+    [data-testid="stFileUploader"] {
+        background: rgba(255,255,255,0.96) !important;
+        border: 1px solid rgba(16,32,51,0.1) !important;
+        border-radius: 8px !important;
+        padding: 10px !important;
+        box-shadow: 0 10px 28px rgba(16,32,51,0.06) !important;
+    }
+    [data-testid="stFileUploaderDropzone"] {
+        background: #f8fbff !important;
+        border: 1px dashed rgba(37,99,235,0.26) !important;
+        border-radius: 8px !important;
+        padding: 14px !important;
+    }
+    [data-testid="stFileUploaderDropzone"] * {
+        color: #102033 !important;
+        fill: #102033 !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button {
+        background: linear-gradient(135deg, var(--teal), var(--blue)) !important;
+        color: #ffffff !important;
+        border: 0 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 24px rgba(37,99,235,0.18) !important;
+        opacity: 1 !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button * {
+        color: #ffffff !important;
+        fill: #ffffff !important;
+    }
+    [data-testid="stFileUploaderDropzoneInstructions"],
+    [data-testid="stFileUploaderFileData"] {
+        color: #5b6b7f !important;
+    }
     div[data-testid="stDataFrame"] {
         background: transparent !important;
         border: 0 !important;
@@ -581,6 +617,8 @@ st.markdown(
         .case-card,
         div[data-testid="stForm"],
         div[data-testid="stAltairChart"],
+        [data-testid="stFileUploader"],
+        [data-testid="stFileUploaderDropzone"],
         div[data-testid="stDataFrame"] {
             background: rgba(255,255,255,0.96) !important;
             color: #102033 !important;
@@ -606,6 +644,8 @@ st.markdown(
         [data-testid="stMarkdownContainer"],
         [data-testid="stText"],
         [data-testid="stCaptionContainer"],
+        [data-testid="stFileUploaderDropzoneInstructions"],
+        [data-testid="stFileUploaderFileData"],
         .page-title,
         .page-subtitle,
         .page-kicker,
@@ -623,6 +663,12 @@ st.markdown(
         }
         svg text {
             fill: #5b6b7f !important;
+        }
+        [data-testid="stFileUploaderDropzone"] button,
+        [data-testid="stFileUploaderDropzone"] button * {
+            color: #ffffff !important;
+            fill: #ffffff !important;
+            opacity: 1 !important;
         }
     }
     </style>
