@@ -1,11 +1,11 @@
 {
   "pandu": {
-    "full_name": "pandu",
+    "full_name": "pandu_19",
     "email": "venkatjamjhyam19@gmail.com",
     "company": "adb",
     "username": "pandu",
-    "salt": "93e4f76c64a454da4a79e6643996ad04",
-    "password_hash": "ae4d9de6f94b38b8f048dec486e830895bc1310be55878cc9ae58744008bd2b5"
+    "salt": "c46f0e7bc4fdb817056e0887b779161c",
+    "password_hash": "66d5b2246fd85a37fb67fd47273f5c936b3694536fdc89a7e9bc9caac40a8b1c"
   },
   "venkat": {
     "full_name": "venkat",

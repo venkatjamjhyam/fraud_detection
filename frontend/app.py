@@ -308,6 +308,8 @@ st.markdown(
         grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 12px;
     }
+    .st-key-desktop_nav { display: block; }
+    .st-key-mobile_nav { display: none; }
     .nav-link {
         display: block;
         text-align: center;
@@ -335,6 +337,111 @@ st.markdown(
     @media (max-width: 900px) {
         .nav-brand-row { align-items: flex-start; flex-direction: column; }
         .nav-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 1024px) {
+        .st-key-sticky_nav {
+            width: calc(100vw - 18px);
+            padding: 12px 14px 12px;
+            top: 0;
+        }
+        .fixed-nav-spacer { height: 124px; }
+        .nav-brand-row {
+            gap: 10px;
+            margin-bottom: 0;
+            align-items: flex-start;
+            padding-right: 78px;
+        }
+        .brand-left {
+            align-items: flex-start;
+            gap: 10px;
+            flex: 1;
+        }
+        .brand-title {
+            font-size: 1.02rem;
+            line-height: 1.15;
+        }
+        .brand-subtitle {
+            font-size: 0.78rem;
+            line-height: 1.3;
+        }
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+        }
+        .signed-chip {
+            display: none;
+        }
+        .st-key-desktop_nav { display: none; }
+        .st-key-mobile_nav {
+            display: block;
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 56px;
+            z-index: 10020;
+        }
+        .st-key-mobile_nav {
+            margin-left: 0;
+        }
+        .st-key-mobile_nav [data-testid="stPopoverButton"] > button {
+            background: linear-gradient(135deg, var(--teal), var(--blue)) !important;
+            border: 1px solid rgba(255,255,255,0.16) !important;
+            border-radius: 8px !important;
+            box-shadow: 0 10px 24px rgba(37,99,235,0.16) !important;
+            min-height: 48px !important;
+            min-width: 56px !important;
+            padding: 0 !important;
+            color: white !important;
+            display: grid !important;
+            place-items: center !important;
+        }
+        .st-key-mobile_nav [data-testid="stPopoverButton"] > button p {
+            color: white !important;
+            font-size: 1.3rem !important;
+            font-weight: 900 !important;
+            line-height: 1 !important;
+            margin: 0 !important;
+        }
+        .st-key-mobile_nav [data-testid="stPopoverButton"] > button svg {
+            display: none !important;
+        }
+        .st-key-mobile_nav [data-testid="stPopover"] {
+            width: 56px !important;
+            margin-left: 0 !important;
+        }
+        div[data-baseweb="popover"] {
+            position: fixed !important;
+            top: 88px !important;
+            left: 14px !important;
+            right: 14px !important;
+            width: auto !important;
+            max-width: none !important;
+            transform: none !important;
+            inset: 88px 14px auto 14px !important;
+            background: rgba(248, 251, 253, 0.98) !important;
+            border: 1px solid rgba(16,32,51,0.12) !important;
+            border-radius: 8px !important;
+            padding: 10px !important;
+            min-width: 0 !important;
+            box-shadow: 0 18px 46px rgba(16,32,51,0.18) !important;
+            overflow: hidden !important;
+        }
+        .st-key-mobile_nav .stButton > button,
+        div[data-baseweb="popover"] .stButton > button {
+            width: 100% !important;
+            min-height: 46px;
+            margin-bottom: 8px;
+            border-radius: 8px !important;
+        }
+        .st-key-mobile_nav .stButton:last-child > button,
+        div[data-baseweb="popover"] .stButton:last-child > button {
+            margin-bottom: 0;
+        }
+        .toolbar-note {
+            font-size: 0.84rem;
+            text-align: left;
+            margin-top: 0;
+        }
     }
     .top-brand {
         display: flex;
@@ -472,6 +579,8 @@ def save_users(users):
     os.makedirs(DATA_DIR, exist_ok=True)
     with open(USERS_PATH, "w", encoding="utf-8") as f:
         json.dump(users, f, indent=2)
+        f.flush()
+        os.fsync(f.fileno())
 
 
 def hash_password(password, salt=None):
@@ -764,15 +873,26 @@ def render_top_navigation():
             """,
             unsafe_allow_html=True,
         )
-        nav_cols = st.columns([1, 1, 1, 1, 1, 1.05])
-        for col, page_name in zip(nav_cols[:5], pages):
-            button_type = "primary" if st.session_state["page"] == page_name else "secondary"
-            if col.button(page_name, use_container_width=True, type=button_type, key=f"nav_{page_name}"):
-                st.session_state["page"] = page_name
-                st.rerun()
-        with nav_cols[5]:
-            if st.button("Logout", use_container_width=True, key="nav_logout"):
-                logout_user()
+        with st.container(key="desktop_nav"):
+            nav_cols = st.columns([1, 1, 1, 1, 1, 1.05])
+            for col, page_name in zip(nav_cols[:5], pages):
+                button_type = "primary" if st.session_state["page"] == page_name else "secondary"
+                if col.button(page_name, use_container_width=True, type=button_type, key=f"nav_{page_name}"):
+                    st.session_state["page"] = page_name
+                    st.rerun()
+            with nav_cols[5]:
+                if st.button("Logout", use_container_width=True, key="nav_logout"):
+                    logout_user()
+
+        with st.container(key="mobile_nav"):
+            with st.popover("\u2630", use_container_width=False):
+                for page_name in pages:
+                    button_type = "primary" if st.session_state["page"] == page_name else "secondary"
+                    if st.button(page_name, use_container_width=True, type=button_type, key=f"mobile_menu_{page_name}"):
+                        st.session_state["page"] = page_name
+                        st.rerun()
+                if st.button("Logout", use_container_width=True, key="mobile_menu_logout"):
+                    logout_user()
 
     st.markdown('<div class="fixed-nav-spacer"></div>', unsafe_allow_html=True)
     return st.session_state["page"]
@@ -1078,6 +1198,7 @@ def render_profile(use_claude):
             email = st.text_input("Email", value=user.get("email", ""))
             submitted = st.form_submit_button("Save Profile", use_container_width=True)
         if submitted:
+            users = load_users()
             if not full_name.strip() or "@" not in email:
                 st.error("Enter a valid name and email.")
             elif username not in users:
@@ -1086,8 +1207,17 @@ def render_profile(use_claude):
                 users[username]["full_name"] = full_name.strip()
                 users[username]["email"] = email.strip()
                 save_users(users)
-                st.session_state["current_user"] = full_name.strip()
-                st.success("Profile updated.")
+                refreshed_users = load_users()
+                refreshed_user = refreshed_users.get(username, {})
+                if (
+                    refreshed_user.get("full_name") == full_name.strip()
+                    and refreshed_user.get("email") == email.strip()
+                ):
+                    st.session_state["current_user"] = full_name.strip()
+                    st.session_state["page"] = "Profile"
+                    st.success("Profile updated.")
+                else:
+                    st.error("Profile could not be updated. Please try again.")
 
         st.markdown('<div class="card-title" style="margin-top:18px;">Change Password</div>', unsafe_allow_html=True)
         with st.form("password_update_form"):
@@ -1096,6 +1226,7 @@ def render_profile(use_claude):
             confirm_password = st.text_input("Confirm new password", type="password")
             submitted = st.form_submit_button("Update Password", use_container_width=True)
         if submitted:
+            users = load_users()
             if username not in users:
                 st.error("Could not find your user record. Please log out and log in again.")
             elif not verify_password(current_password, users[username]["salt"], users[username]["password_hash"]):
@@ -1109,7 +1240,13 @@ def render_profile(use_claude):
                 users[username]["salt"] = salt
                 users[username]["password_hash"] = password_hash
                 save_users(users)
-                st.success("Password updated successfully.")
+                refreshed_users = load_users()
+                refreshed_user = refreshed_users.get(username, {})
+                if refreshed_user and verify_password(new_password, refreshed_user["salt"], refreshed_user["password_hash"]):
+                    st.session_state["page"] = "Profile"
+                    st.success("Password updated successfully. Log out and sign in with the new password.")
+                else:
+                    st.error("Password update did not persist. Please try again.")
 
     st.caption(f"Groq status: {'API key found and ready' if grok_key_available() else 'API key not found, using rules only'}.")
 
