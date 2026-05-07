@@ -234,11 +234,19 @@ st.markdown(
         --amber: #b7791f;
         --green: #15803d;
     }
+    html, body, [data-testid="stAppViewContainer"], .stApp, [data-testid="stMainBlockContainer"] {
+        color-scheme: light !important;
+        forced-color-adjust: none !important;
+        -webkit-text-size-adjust: 100%;
+    }
     .stApp {
         background:
             radial-gradient(circle at 12% 10%, rgba(8,145,178,0.12), transparent 26%),
             radial-gradient(circle at 88% 14%, rgba(79,70,229,0.1), transparent 30%),
             linear-gradient(135deg, #f8fbfd 0%, #eef7f8 52%, #f7f3ea 100%);
+        color: var(--ink);
+    }
+    body, p, span, label, div, h1, h2, h3, h4, h5, h6, li, a {
         color: var(--ink);
     }
     [data-testid="stHeader"] {
@@ -559,6 +567,64 @@ st.markdown(
     .risk-chip.high { color: #991b1b; background: rgba(225,29,72,0.08); border-color: rgba(225,29,72,0.2); }
     .risk-chip.medium { color: #92400e; background: rgba(183,121,31,0.09); border-color: rgba(183,121,31,0.2); }
     .risk-chip.low { color: #166534; background: rgba(21,128,61,0.09); border-color: rgba(21,128,61,0.2); }
+    @media (prefers-color-scheme: dark) {
+        html, body, [data-testid="stAppViewContainer"], .stApp, [data-testid="stMainBlockContainer"] {
+            color-scheme: light !important;
+            background-color: #f4f8fb !important;
+            color: #102033 !important;
+        }
+        [data-testid="stHeader"],
+        .st-key-sticky_nav,
+        .card,
+        .metric-card,
+        .schema-card,
+        .case-card,
+        div[data-testid="stForm"],
+        div[data-testid="stAltairChart"],
+        div[data-testid="stDataFrame"] {
+            background: rgba(255,255,255,0.96) !important;
+            color: #102033 !important;
+        }
+        input,
+        textarea,
+        select,
+        option,
+        div[data-baseweb="input"],
+        div[data-baseweb="select"] > div,
+        .stSelectbox,
+        .stTextInput,
+        .stTextArea {
+            background: #ffffff !important;
+            color: #102033 !important;
+            -webkit-text-fill-color: #102033 !important;
+            caret-color: #102033 !important;
+        }
+        ::placeholder {
+            color: #7a8797 !important;
+            opacity: 1 !important;
+        }
+        [data-testid="stMarkdownContainer"],
+        [data-testid="stText"],
+        [data-testid="stCaptionContainer"],
+        .page-title,
+        .page-subtitle,
+        .page-kicker,
+        .brand-title,
+        .brand-subtitle,
+        .card-title,
+        .card-muted,
+        .metric-label,
+        .metric-value,
+        .schema-role,
+        .schema-col,
+        .schema-reason,
+        .toolbar-note {
+            color: #102033 !important;
+        }
+        svg text {
+            fill: #5b6b7f !important;
+        }
+    }
     </style>
     """,
     unsafe_allow_html=True,
