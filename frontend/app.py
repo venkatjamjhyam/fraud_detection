@@ -564,56 +564,7 @@ st.markdown(
         background: transparent !important;
     }
     [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] {
-        background: #ffffff !important;
-        border: 1px solid rgba(16,32,51,0.08) !important;
-        border-radius: 8px !important;
-        box-shadow: 0 8px 22px rgba(16,32,51,0.05) !important;
-    }
-    [data-testid="stFileUploader"] [data-testid="stFileUploaderFileName"],
-    [data-testid="stFileUploader"] [data-testid="stFileUploaderFileSize"] {
-        color: #102033 !important;
-    }
-    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] > div:first-child {
-        background: linear-gradient(135deg, #22c55e, #16a34a) !important;
-        border-radius: 8px !important;
-        min-width: 42px !important;
-        min-height: 42px !important;
-        width: 42px !important;
-        height: 42px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        position: relative !important;
-        overflow: hidden !important;
-    }
-    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] > div:first-child::before {
-        content: "✓";
-        color: #ffffff !important;
-        font-size: 1.1rem;
-        font-weight: 900;
-        line-height: 1;
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2;
-    }
-    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] > div:first-child *,
-    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] > div:first-child svg {
-        opacity: 0 !important;
-        fill: transparent !important;
-        color: transparent !important;
-    }
-    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button {
-        background: linear-gradient(135deg, var(--teal), var(--blue)) !important;
-        border: 0 !important;
-        color: #ffffff !important;
-        border-radius: 8px !important;
-    }
-    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button * {
-        color: #ffffff !important;
-        fill: #ffffff !important;
+        display: none !important;
     }
     div[data-testid="stDataFrame"] {
         background: transparent !important;
@@ -1146,7 +1097,11 @@ def render_top_navigation():
 
 
 def handle_upload_and_analysis(use_claude):
-    uploaded_file = st.file_uploader("Finance transaction file", type=["csv"], help="Upload a CSV file with any column names.")
+    uploaded_file = st.file_uploader(
+        "Finance transaction file",
+        type=["csv"],
+        help="Upload a CSV file with any column names.",
+    )
     if uploaded_file is None:
         return
 

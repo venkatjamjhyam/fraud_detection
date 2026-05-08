@@ -1,7 +1,12 @@
-rule_id,rule_name,condition,risk_score,explanation
-R001,High Amount Transaction,amount > 100000,30,Transaction amount is unusually high and needs review
-R002,Unapproved Vendor,is_approved_vendor = No,35,Vendor is not present in approved vendor list
-R003,Late Night Transaction,transaction_time between 22:00 and 05:00,20,Transaction happened outside normal business hours
-R004,High Risk Vendor,vendor_risk_level = High,25,Vendor has high risk level in vendor master data
-R005,Round Amount Payment,amount ends with 000 or 999,10,Round or near-round amount may indicate suspicious manual entry
-R006,Possible Duplicate,same vendor and similar amount within 3 days,25,Similar payment to same vendor may be duplicate
+vendor_id,vendor_name,vendor_type,registered_city,risk_level,is_approved_vendor,average_invoice_amount
+V001,Amazon Business,Office Supplies,Hyderabad,Low,Yes,5000
+V002,Apollo Pharmacy,Medical,Hyderabad,Low,Yes,3000
+V003,Dell India,Hardware,Bangalore,Medium,Yes,60000
+V004,Local Stationery,Office Supplies,Hyderabad,Low,Yes,1500
+V005,Uber,Travel,Mumbai,Low,Yes,1000
+V006,CloudServe Pvt Ltd,Software,Hyderabad,Medium,Yes,30000
+V007,Hotel Royal,Travel,Chennai,Medium,Yes,8000
+V008,Microsoft,Software,Bangalore,Low,Yes,20000
+V009,Unknown Vendor,Consulting,Delhi,High,No,50000
+V010,Suspicious Vendor Pvt Ltd,Software,Kolkata,High,No,75000
+V011,QuickPay Services,Consulting,Hyderabad,High,No,30000
