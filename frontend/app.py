@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -17,7 +18,7 @@ from agent import run_agent
 from data_processing import process_data
 from detection import detect_anomalies
 from explanation import explain_anomalies
-from schema_detection import detect_schema
+from schema_detection import detect_schema, parse_date_value, parse_money_value
 
 
 RAW_PATH = DATA_DIR / "uploaded_transactions.csv"
@@ -557,6 +558,63 @@ st.markdown(
     [data-testid="stFileUploaderFileData"] {
         color: #5b6b7f !important;
     }
+    [data-testid="stFileUploader"] section,
+    [data-testid="stFileUploader"] ul,
+    [data-testid="stFileUploader"] li {
+        background: transparent !important;
+    }
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] {
+        background: #ffffff !important;
+        border: 1px solid rgba(16,32,51,0.08) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 8px 22px rgba(16,32,51,0.05) !important;
+    }
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderFileName"],
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderFileSize"] {
+        color: #102033 !important;
+    }
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] > div:first-child {
+        background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+        border-radius: 8px !important;
+        min-width: 42px !important;
+        min-height: 42px !important;
+        width: 42px !important;
+        height: 42px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] > div:first-child::before {
+        content: "✓";
+        color: #ffffff !important;
+        font-size: 1.1rem;
+        font-weight: 900;
+        line-height: 1;
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+    }
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] > div:first-child *,
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] > div:first-child svg {
+        opacity: 0 !important;
+        fill: transparent !important;
+        color: transparent !important;
+    }
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button {
+        background: linear-gradient(135deg, var(--teal), var(--blue)) !important;
+        border: 0 !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+    }
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button * {
+        color: #ffffff !important;
+        fill: #ffffff !important;
+    }
     div[data-testid="stDataFrame"] {
         background: transparent !important;
         border: 0 !important;
@@ -630,6 +688,7 @@ st.markdown(
         div[data-testid="stAltairChart"],
         [data-testid="stFileUploader"],
         [data-testid="stFileUploaderDropzone"],
+        [data-testid="stFileUploaderFile"],
         div[data-testid="stDataFrame"] {
             background: rgba(255,255,255,0.96) !important;
             color: #102033 !important;
@@ -676,7 +735,9 @@ st.markdown(
             fill: #5b6b7f !important;
         }
         [data-testid="stFileUploaderDropzone"] button,
-        [data-testid="stFileUploaderDropzone"] button * {
+        [data-testid="stFileUploaderDropzone"] button *,
+        [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button,
+        [data-testid="stFileUploader"] [data-testid="stFileUploaderFile"] button * {
             color: #ffffff !important;
             fill: #ffffff !important;
             opacity: 1 !important;
@@ -818,6 +879,60 @@ def run_pipeline(mapping=None, use_claude=True):
 
 def mapping_signature(mapping):
     return tuple((key, mapping.get(key) or "Auto detect") for key in sorted(mapping))
+
+
+def _sample_values(series, limit=120):
+    values = series.dropna().astype(str).str.strip()
+    values = values[values != ""]
+    return values.head(limit)
+
+
+def validate_mapping_selection(df, role, column):
+    if not column or column not in df.columns:
+        return True, ""
+
+    values = _sample_values(df[column])
+    if values.empty:
+        return False, f"{role.title()} column has no usable values."
+
+    if role == "date":
+        ratio = values.map(parse_date_value).notna().mean()
+        return ratio >= 0.55, f"{int(ratio * 100)}% of sampled values look like dates."
+
+    if role == "amount":
+        ratio = values.map(parse_money_value).notna().mean()
+        return ratio >= 0.70, f"{int(ratio * 100)}% of sampled values parse as numbers."
+
+    if role == "vendor":
+        text_ratio = values.map(lambda x: bool(re.search(r"[A-Za-z]", x))).mean()
+        unique_ratio = values.nunique(dropna=True) / max(len(values), 1)
+        valid = text_ratio >= 0.75 and unique_ratio >= 0.18
+        return valid, f"{int(text_ratio * 100)}% of sampled values contain name-like text."
+
+    if role == "category":
+        text_ratio = values.map(lambda x: bool(re.search(r"[A-Za-z]", x))).mean()
+        unique_ratio = values.nunique(dropna=True) / max(len(values), 1)
+        valid = text_ratio >= 0.70 and unique_ratio <= 0.85
+        return valid, f"{int(text_ratio * 100)}% of sampled values contain category-like text."
+
+    if role == "description":
+        text_ratio = values.map(lambda x: bool(re.search(r"[A-Za-z]", x))).mean()
+        avg_length = values.str.len().mean()
+        valid = text_ratio >= 0.75 and avg_length >= 8
+        return valid, f"Average description length is {avg_length:.0f} characters."
+
+    return True, ""
+
+
+def validate_mapping(df, mapping):
+    errors = {}
+    details = {}
+    for role, column in mapping.items():
+        valid, message = validate_mapping_selection(df, role, column)
+        details[role] = message
+        if column and not valid:
+            errors[role] = message
+    return errors, details
 
 
 def render_page_header(title, subtitle, kicker="Audit Intelligence Console"):
@@ -1065,6 +1180,8 @@ def handle_upload_and_analysis(use_claude):
 def rerun_with_mapping(use_claude):
     mapping = st.session_state.get("mapping", {})
     signature = (st.session_state.get("file_signature"), mapping_signature(mapping), use_claude)
+    if st.session_state.get("last_mapping_signature") == signature:
+        return
     with st.spinner("Refreshing audit with selected mapping..."):
         df = run_pipeline(mapping=mapping, use_claude=use_claude)
         st.session_state["analysis_df"] = df
@@ -1230,16 +1347,25 @@ def render_schema_page(use_claude):
     columns = ["Auto detect"] + raw_df.columns.astype(str).tolist()
     map_cols = st.columns(5)
     labels = {"date": "Date", "amount": "Amount", "vendor": "Vendor", "category": "Category", "description": "Description"}
-    mapping = st.session_state.get("mapping", {})
+    previous_mapping = dict(st.session_state.get("mapping", {}))
+    mapping = dict(previous_mapping)
     for col, role in zip(map_cols, labels):
         current = mapping.get(role) or schema.get(role, {}).get("column")
         index = columns.index(current) if current in columns else 0
         selected = col.selectbox(labels[role], columns, index=index, key=f"map_{role}")
         mapping[role] = None if selected == "Auto detect" else selected
     st.session_state["mapping"] = mapping
-    if st.button("Refresh Audit With Mapping", use_container_width=True):
-        rerun_with_mapping(use_claude)
-        st.success("Audit refreshed with selected mapping.")
+    validation_errors, validation_details = validate_mapping(raw_df, mapping)
+    st.session_state["mapping_validation_errors"] = validation_errors
+
+    changed = mapping_signature(mapping) != mapping_signature(previous_mapping)
+    if changed:
+        if validation_errors:
+            readable = ", ".join(f"{role.title()}: {message}" for role, message in validation_errors.items())
+            st.error(f"Mapping updated, but some selections look wrong. {readable}")
+        else:
+            rerun_with_mapping(use_claude)
+            st.success("Audit updated automatically.")
     st.markdown("</div>", unsafe_allow_html=True)
     st.dataframe(raw_df.head(30), use_container_width=True, height=280)
 
