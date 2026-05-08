@@ -354,16 +354,25 @@ st.markdown(
         }
         .fixed-nav-spacer { height: 124px; }
         .nav-brand-row {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: flex-start !important;
             gap: 10px;
             margin-bottom: 0;
             align-items: flex-start;
-            padding-right: 78px;
+            padding-right: 74px;
+            min-height: 56px;
         }
         .brand-left {
+            display: flex !important;
+            flex-direction: row !important;
             align-items: flex-start;
             gap: 10px;
             flex: 1;
+            min-width: 0;
+            width: 100%;
         }
+        .brand-left > div:last-child { min-width: 0; }
         .brand-title {
             font-size: 1.02rem;
             line-height: 1.15;
@@ -387,9 +396,11 @@ st.markdown(
             right: 14px;
             width: 56px;
             z-index: 10020;
+            margin: 0 !important;
         }
-        .st-key-mobile_nav {
-            margin-left: 0;
+        .st-key-mobile_nav > div {
+            margin: 0 !important;
+            padding: 0 !important;
         }
         .st-key-mobile_nav [data-testid="stPopoverButton"] > button {
             background: linear-gradient(135deg, var(--teal), var(--blue)) !important;
@@ -415,17 +426,17 @@ st.markdown(
         }
         .st-key-mobile_nav [data-testid="stPopover"] {
             width: 56px !important;
-            margin-left: 0 !important;
+            margin: 0 !important;
         }
         div[data-baseweb="popover"] {
             position: fixed !important;
-            top: 88px !important;
+            top: 92px !important;
             left: 14px !important;
             right: 14px !important;
             width: auto !important;
             max-width: none !important;
             transform: none !important;
-            inset: 88px 14px auto 14px !important;
+            inset: 92px 14px auto 14px !important;
             background: rgba(248, 251, 253, 0.98) !important;
             border: 1px solid rgba(16,32,51,0.12) !important;
             border-radius: 8px !important;
@@ -765,6 +776,10 @@ def logout_user():
     st.rerun()
 
 
+def close_mobile_menu():
+    st.session_state["mobile_menu_version"] = st.session_state.get("mobile_menu_version", 0) + 1
+
+
 def verify_password(password, salt, expected_hash):
     _salt, password_hash = hash_password(password, salt=salt)
     return password_hash == expected_hash
@@ -966,6 +981,8 @@ def render_sidebar(use_claude):
 def render_top_navigation():
     if "page" not in st.session_state:
         st.session_state["page"] = "Dashboard"
+    if "mobile_menu_version" not in st.session_state:
+        st.session_state["mobile_menu_version"] = 0
 
     pages = ["Dashboard", "Schema Mapping", "Audit Queue", "Reports", "Profile"]
 
@@ -997,14 +1014,17 @@ def render_top_navigation():
                     logout_user()
 
         with st.container(key="mobile_nav"):
-            with st.popover("\u2630", use_container_width=False):
-                for page_name in pages:
-                    button_type = "primary" if st.session_state["page"] == page_name else "secondary"
-                    if st.button(page_name, use_container_width=True, type=button_type, key=f"mobile_menu_{page_name}"):
-                        st.session_state["page"] = page_name
-                        st.rerun()
-                if st.button("Logout", use_container_width=True, key="mobile_menu_logout"):
-                    logout_user()
+            with st.container(key=f"mobile_nav_inner_{st.session_state['mobile_menu_version']}"):
+                with st.popover("\u2630", use_container_width=False):
+                    for page_name in pages:
+                        button_type = "primary" if st.session_state["page"] == page_name else "secondary"
+                        if st.button(page_name, use_container_width=True, type=button_type, key=f"mobile_menu_{page_name}"):
+                            st.session_state["page"] = page_name
+                            close_mobile_menu()
+                            st.rerun()
+                    if st.button("Logout", use_container_width=True, key="mobile_menu_logout"):
+                        close_mobile_menu()
+                        logout_user()
 
     st.markdown('<div class="fixed-nav-spacer"></div>', unsafe_allow_html=True)
     return st.session_state["page"]
