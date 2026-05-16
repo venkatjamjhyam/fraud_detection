@@ -221,12 +221,21 @@ st.markdown(
     """
     <style>
     :root {
+        color-scheme: light dark;
         --page: #f4f8fb;
         --ink: #102033;
         --soft-ink: #5b6b7f;
         --surface: #ffffff;
         --surface-2: #eef6f8;
+        --surface-3: rgba(255,255,255,0.9);
         --edge: rgba(16, 32, 51, 0.1);
+        --header-bg: rgba(248, 251, 253, 0.88);
+        --nav-bg: rgba(248, 251, 253, 0.94);
+        --shadow: 0 18px 46px rgba(16,32,51,0.1);
+        --card-shadow: 0 14px 38px rgba(16,32,51,0.06);
+        --uploader-bg: rgba(255,255,255,0.96);
+        --dropzone-bg: #f8fbff;
+        --dropzone-border: rgba(37,99,235,0.26);
         --teal: #0f766e;
         --cyan: #0891b2;
         --blue: #2563eb;
@@ -236,8 +245,7 @@ st.markdown(
         --green: #15803d;
     }
     html, body, [data-testid="stAppViewContainer"], .stApp, [data-testid="stMainBlockContainer"] {
-        color-scheme: light !important;
-        forced-color-adjust: none !important;
+        color-scheme: light dark;
         -webkit-text-size-adjust: 100%;
     }
     .stApp {
@@ -251,7 +259,7 @@ st.markdown(
         color: var(--ink);
     }
     [data-testid="stHeader"] {
-        background: rgba(248, 251, 253, 0.88);
+        background: var(--header-bg);
         backdrop-filter: blur(14px);
         height: 0 !important;
         min-height: 0 !important;
@@ -270,7 +278,7 @@ st.markdown(
         padding-bottom: 0;
     }
     .top-shell {
-        background: rgba(255,255,255,0.82);
+        background: var(--surface-3);
         border: 1px solid var(--edge);
         border-radius: 8px;
         padding: 18px 20px;
@@ -281,12 +289,12 @@ st.markdown(
         position: sticky;
         top: 0;
         z-index: 9999;
-        background: rgba(248, 251, 253, 0.92);
+        background: var(--nav-bg);
         backdrop-filter: blur(18px);
         border: 1px solid var(--edge);
         border-radius: 8px;
         padding: 14px 16px;
-        box-shadow: 0 18px 46px rgba(16,32,51,0.1);
+        box-shadow: var(--shadow);
         margin-bottom: 20px;
     }
     .st-key-sticky_nav {
@@ -296,12 +304,12 @@ st.markdown(
         transform: translateX(-50%);
         width: calc(100vw - 24px);
         z-index: 9999;
-        background: rgba(248, 251, 253, 0.94);
+        background: var(--nav-bg);
         backdrop-filter: blur(18px);
         border: 1px solid var(--edge);
         border-radius: 8px;
         padding: 12px 16px 10px;
-        box-shadow: 0 18px 46px rgba(16,32,51,0.1);
+        box-shadow: var(--shadow);
         margin-bottom: 20px;
     }
     .fixed-nav-spacer { height: 132px; }
@@ -438,7 +446,7 @@ st.markdown(
             max-width: none !important;
             transform: none !important;
             inset: 92px 14px auto 14px !important;
-            background: rgba(248, 251, 253, 0.98) !important;
+            background: var(--surface) !important;
             border: 1px solid rgba(16,32,51,0.12) !important;
             border-radius: 8px !important;
             padding: 10px !important;
@@ -520,21 +528,21 @@ st.markdown(
     }
     .card, .metric-card, .schema-card, .case-card,
     div[data-testid="stForm"], div[data-testid="stAltairChart"] {
-        background: rgba(255,255,255,0.9) !important;
+        background: var(--surface-3) !important;
         border: 1px solid var(--edge) !important;
         color: var(--ink) !important;
-        box-shadow: 0 14px 38px rgba(16,32,51,0.06) !important;
+        box-shadow: var(--card-shadow) !important;
     }
     [data-testid="stFileUploader"] {
-        background: rgba(255,255,255,0.96) !important;
+        background: var(--uploader-bg) !important;
         border: 1px solid rgba(16,32,51,0.1) !important;
         border-radius: 8px !important;
         padding: 10px !important;
         box-shadow: 0 10px 28px rgba(16,32,51,0.06) !important;
     }
     [data-testid="stFileUploaderDropzone"] {
-        background: #f8fbff !important;
-        border: 1px dashed rgba(37,99,235,0.26) !important;
+        background: var(--dropzone-bg) !important;
+        border: 1px dashed var(--dropzone-border) !important;
         border-radius: 8px !important;
         padding: 14px !important;
     }
@@ -589,7 +597,7 @@ st.markdown(
         color: #ffffff !important;
     }
     div[data-baseweb="input"] {
-        background: #ffffff !important;
+        background: var(--surface) !important;
         border: 1px solid rgba(16,32,51,0.16) !important;
         border-radius: 8px !important;
     }
@@ -609,7 +617,7 @@ st.markdown(
     button[data-baseweb="tab"][aria-selected="true"] { color: var(--teal); }
     .auth-brand {
         background:
-            linear-gradient(145deg, rgba(255,255,255,0.95), rgba(236,248,250,0.95)) !important;
+            linear-gradient(145deg, color-mix(in srgb, var(--surface) 96%, transparent), color-mix(in srgb, var(--surface-2) 96%, transparent)) !important;
         color: var(--ink);
         border: 1px solid var(--edge);
         box-shadow: 0 24px 70px rgba(16,32,51,0.12);
@@ -624,10 +632,32 @@ st.markdown(
     .risk-chip.medium { color: #92400e; background: rgba(183,121,31,0.09); border-color: rgba(183,121,31,0.2); }
     .risk-chip.low { color: #166534; background: rgba(21,128,61,0.09); border-color: rgba(21,128,61,0.2); }
     @media (prefers-color-scheme: dark) {
+        :root {
+            --page: #08111f;
+            --ink: #eef4ff;
+            --soft-ink: #a9b8cc;
+            --surface: #0f1828;
+            --surface-2: #132238;
+            --surface-3: rgba(15,24,40,0.92);
+            --edge: rgba(169, 184, 204, 0.16);
+            --header-bg: rgba(8, 17, 31, 0.88);
+            --nav-bg: rgba(10, 20, 36, 0.94);
+            --shadow: 0 18px 46px rgba(0,0,0,0.32);
+            --card-shadow: 0 14px 38px rgba(0,0,0,0.22);
+            --uploader-bg: rgba(15,24,40,0.96);
+            --dropzone-bg: #111d31;
+            --dropzone-border: rgba(125, 211, 252, 0.26);
+        }
         html, body, [data-testid="stAppViewContainer"], .stApp, [data-testid="stMainBlockContainer"] {
-            color-scheme: light !important;
-            background-color: #f4f8fb !important;
-            color: #102033 !important;
+            color-scheme: dark !important;
+            background-color: #08111f !important;
+            color: var(--ink) !important;
+        }
+        .stApp {
+            background:
+                radial-gradient(circle at 12% 10%, rgba(8,145,178,0.18), transparent 26%),
+                radial-gradient(circle at 88% 14%, rgba(79,70,229,0.16), transparent 30%),
+                linear-gradient(135deg, #07111f 0%, #0a1830 52%, #081827 100%) !important;
         }
         [data-testid="stHeader"],
         .st-key-sticky_nav,
@@ -641,8 +671,8 @@ st.markdown(
         [data-testid="stFileUploaderDropzone"],
         [data-testid="stFileUploaderFile"],
         div[data-testid="stDataFrame"] {
-            background: rgba(255,255,255,0.96) !important;
-            color: #102033 !important;
+            background: var(--surface-3) !important;
+            color: var(--ink) !important;
         }
         input,
         textarea,
@@ -653,13 +683,13 @@ st.markdown(
         .stSelectbox,
         .stTextInput,
         .stTextArea {
-            background: #ffffff !important;
-            color: #102033 !important;
-            -webkit-text-fill-color: #102033 !important;
-            caret-color: #102033 !important;
+            background: var(--surface) !important;
+            color: var(--ink) !important;
+            -webkit-text-fill-color: var(--ink) !important;
+            caret-color: var(--ink) !important;
         }
         ::placeholder {
-            color: #7a8797 !important;
+            color: #95a4b8 !important;
             opacity: 1 !important;
         }
         [data-testid="stMarkdownContainer"],
@@ -680,10 +710,10 @@ st.markdown(
         .schema-col,
         .schema-reason,
         .toolbar-note {
-            color: #102033 !important;
+            color: var(--ink) !important;
         }
         svg text {
-            fill: #5b6b7f !important;
+            fill: var(--soft-ink) !important;
         }
         [data-testid="stFileUploaderDropzone"] button,
         [data-testid="stFileUploaderDropzone"] button *,
@@ -692,6 +722,9 @@ st.markdown(
             color: #ffffff !important;
             fill: #ffffff !important;
             opacity: 1 !important;
+        }
+        div[data-baseweb="popover"] * {
+            color: var(--ink) !important;
         }
     }
     </style>
